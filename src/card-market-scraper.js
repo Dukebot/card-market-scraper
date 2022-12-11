@@ -143,15 +143,13 @@ async function getArticles(page) {
                     const attrValue = spanElement.getAttribute('data-original-title')
                     if (attrValue === null) continue
 
-                    // Item location
                     if (attrValue.includes('Item location: ')) {
                         data.location = attrValue.replace('Item location: ', '')
                     }
-                    // Language
                     if (["English", "Spanish", "German", "French", "Italian", "Portuguese"].includes(attrValue)) {
                         data.language = attrValue
                     }
-                    if (attrValue.includes('Firmado')) {
+                    if (attrValue.includes('Signed')) {
                         data.signed = true
                     }
                     if (attrValue.includes('Altered')) {
