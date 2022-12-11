@@ -7,7 +7,6 @@ const Scraper = require('./scraper')
  */
 const loadMoreBtnMaxPresses = 15
 
-module.exports = { scrapeCardArticles }
 
 /**
  * Scrape card market cards articles info
@@ -22,11 +21,7 @@ async function scrapeCardArticles(cardUrls) {
         const page = await Scraper.newPage(browser)
         for (const cardUrl of cardUrls) {
             const card = await getCardArticles(page, cardUrl)
-
-            cards.push({
-                collection: cardUrl.split('/')[4],
-                ...card
-            })
+            cards.push(card)
 
             // Add a delay to reduce the request rate
             await Scraper.waitRandom(2500, 5000)
@@ -55,7 +50,12 @@ async function getCardArticles(page, cardUrl) {
     const articles = await getArticles(page)
 
     // Return object with the card info and array of articles
-    return { ...nameAndEdition, articles }
+    return { 
+        url: cardUrl,
+        collection: cardUrl.split('/')[4],
+        ...nameAndEdition, 
+        articles 
+    }
 }
 
 /**
@@ -78,6 +78,7 @@ async function getNameAndEdition(page) {
     })
 }
 
+// TODO this function is incomplete as the card pages do not have always the same structure
 /**
  * @returns {object} Object with card genera info
  */
@@ -85,10 +86,10 @@ async function getHeaderInfo(page) {
     return page.evaluate(() => {
         try {
             const dlElem = document.querySelector('dl.labeled')
-            if (dlElem === null) return { error: 'd1Elem es null' }
+            if (dlElem === null) return { error: 'd1Elem is null' }
 
             const ddElemArray = dlElem.querySelectorAll('dd')
-            if (ddElemArray === null) return { error: 'ddElemArray es null' }
+            if (ddElemArray === null) return { error: 'ddElemArray is null' }
 
             let offset = 0;
             if (isNumeric(ddElemArray[1].innerText))
@@ -142,13 +143,12 @@ async function getArticles(page) {
                     const attrValue = spanElement.getAttribute('data-original-title')
                     if (attrValue === null) continue
 
-                    // TODO this only works in spanish, maybe standarize for english?
-                    // Or add support for multiple languages?
-
-                    if (attrValue.includes('Ubicación del artículo: ')) {
-                        data.location = attrValue.replace('Ubicación del artículo: ', '')
+                    // Item location
+                    if (attrValue.includes('Item location: ')) {
+                        data.location = attrValue.replace('Item location: ', '')
                     }
-                    if (["Inglés", "Español", "Alemán", "Francés"].includes(attrValue)) {
+                    // Language
+                    if (["English", "Spanish", "German", "French", "Italian", "Portuguese"].includes(attrValue)) {
                         data.language = attrValue
                     }
                     if (attrValue.includes('Firmado')) {
@@ -189,4 +189,9 @@ async function getArticles(page) {
             return error.toString()
         }
     })
+}
+
+
+module.exports = { 
+    scrapeCardArticles 
 }

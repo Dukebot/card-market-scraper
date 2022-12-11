@@ -14,39 +14,6 @@ puppeteer.use(StealthPlugin())
 puppeteer.use(AnonymizeUA())
 
 /**
- * Wrapper for puppeteer and it's plugins.
- * Contains functions to make scraping more simple.
- */
-module.exports = {
-    puppeteerDefaultLaunchOptions,
-    puppeteerDefaultArgs,
-    scrape,
-    botTest,
-
-    // browser
-    newBrowser,
-    closeBrowser,
-    getPages,
-    getDefaultPage,
-    
-    // page
-    newPage,
-    disableWebdriver,
-    goTo,
-    getCookies,
-    setCookies,
-    getLocalStorage,
-    setLocalStorage,
-    pressLoadMoreButton,
-    autoScroll,
-
-    // utils
-    wait,
-    waitRandom,
-    arrayChunk,
-}
-
-/**
  * Returns an object with the default puppeteer launch options
  * @returns {object} default puppeteer launch options
  */
@@ -350,4 +317,38 @@ function arrayChunk(array, chunkSize) {
     }
 
     return arrayChunks
+}
+
+
+/**
+ * Wrapper for puppeteer and it's plugins.
+ * Contains functions to make scraping more simple.
+ */
+module.exports = {
+    puppeteerDefaultLaunchOptions,
+    puppeteerDefaultArgs,
+    scrape,
+    botTest,
+
+    // browser
+    newBrowser,
+    closeBrowser,
+    getPages,
+    getDefaultPage,
+    newPage,
+    
+    // page
+    disableWebdriver,
+    goTo,
+    getCookies,
+    setCookies,
+    getLocalStorage,
+    setLocalStorage,
+    pressLoadMoreButton,
+    autoScroll,
+
+    // utils
+    wait,
+    waitRandom,
+    arrayChunk,
 }
