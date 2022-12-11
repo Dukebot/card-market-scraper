@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 const Scraper = require('./scraper')
 
 /**
@@ -17,8 +19,9 @@ const loadMoreBtnMaxPresses = 15
 async function scrapeCardArticles(cardUrls) {
     return Scraper.scrape(async function (browser) {
         const cards = []
-
         const page = await Scraper.newPage(browser)
+
+        // Navigate to each card url and extract articles information
         for (const cardUrl of cardUrls) {
             const card = await getCardArticles(page, cardUrl)
             cards.push(card)
@@ -49,12 +52,35 @@ async function getCardArticles(page, cardUrl) {
     const headerInfo = await getHeaderInfo(page)
     const articles = await getArticles(page)
 
+    // Calculate extra data from articles
+    const articlesData = calculateArticlesData(articles)
+    
     // Return object with the card info and array of articles
     return { 
         url: cardUrl,
+        datetime: moment().format('YYYY-MM-DD HH:mm:ss'),
         collection: cardUrl.split('/')[4],
         ...nameAndEdition, 
-        articles 
+        ...articlesData,
+        articles,
+    }
+
+    function calculateArticlesData(articles) {
+        let minPrice = null
+        let maxPrice = null
+        let stock = 0
+    
+        for (const article of articles) {
+            if (!minPrice || minPrice > article.price.value) {
+                minPrice = article.price.value
+            }
+            if (!maxPrice || maxPrice < article.price.value) {
+                maxPrice = article.price.value
+            }
+            stock += article.stock
+        }
+        
+        return { minPrice, maxPrice, stock }
     }
 }
 
@@ -185,6 +211,29 @@ async function getArticles(page) {
             return articles
         } catch (error) {
             return error.toString()
+        }
+    }).then(articles => {
+        // Format articles info
+        for (const article of articles) {
+            article.price = formatPrice(article.price)
+            article.stock = +article.stock
+        }
+
+        return articles
+
+        function formatPrice(price) {
+            const priceSplit = price.split(' ')
+        
+            let value = priceSplit[0]
+            if (value.includes('.')) 
+                value = value.split('.').join('')
+            if (value.includes(','))
+                value = value.replace(',', '.')
+        
+            return {
+                value: +value,
+                currency: priceSplit[1]
+            }
         }
     })
 }

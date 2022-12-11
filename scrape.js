@@ -1,10 +1,13 @@
 const fs = require('fs');
 const moment = require('moment');
 const CardMarketScraper = require('./src/card-market-scraper');
+const Timer = require('./src/utils/timer');
 
 scrape();
 
 async function scrape() {
+    const timer = new Timer();
+
     // Get the array of card urls to scrape
     const cardUrls = getCardUrls();
     console.log('cardUrls', cardUrls);
@@ -17,6 +20,9 @@ async function scrape() {
     const fileName = moment().format('YYYY-MM-DD') + '_' + Date.now() + '.json';
     if (!fs.existsSync('result')) fs.mkdirSync('result');
     fs.writeFileSync('result/' + fileName, JSON.stringify(result, null, 2));
+
+    // Log the total execution time
+    timer.registerAndLogTotal('END');
 }
 
 function getCardUrls() {
