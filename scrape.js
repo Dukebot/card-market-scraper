@@ -1,12 +1,13 @@
 const fs = require('fs');
 const moment = require('moment');
+
+const Utils = require('./src/utils');
 const CardMarketScraper = require('./src/card-market-scraper');
-const Timer = require('./src/utils/timer');
 
 scrape();
 
 async function scrape() {
-    const timer = new Timer();
+    const timer = new Utils.Timer();
 
     // Get the array of card urls to scrape
     const cardUrls = getCardUrls();
