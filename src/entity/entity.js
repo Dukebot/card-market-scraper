@@ -1,3 +1,7 @@
+/**
+ * Base class for all entities of the application.
+ * Entities are usefull to structure and format data.
+ */
 class Entity {
     constructor(properties, values) {
         // Initialize entity properties

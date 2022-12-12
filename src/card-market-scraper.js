@@ -28,10 +28,10 @@ async function scrapeCardArticles(cardUrls) {
             cards.push(card)
 
             // Add a delay to reduce the request rate
-            await Scraper.waitRandom(2500, 5000)
+            await Scraper.waitRandom(1000, 2000)
         }
 
-        // Format data
+        // Format scraped data
         cards = cards.map(card => {
             card = new Entity.Card(card)
             for (const article of card.articles) {
