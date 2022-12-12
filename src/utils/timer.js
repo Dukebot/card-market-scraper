@@ -1,3 +1,6 @@
+/**
+ * Utility class that helps to log process execution time.
+ */
 class Timer {
     constructor() {
         this.times = null

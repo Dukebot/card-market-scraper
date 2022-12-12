@@ -1,3 +1,6 @@
+/**
+ * ENTITY INDEX
+ */
 const Entity = {
     Card: require('./entities/card'),
     Article: require('./entities/article'),
