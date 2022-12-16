@@ -8,22 +8,39 @@ scrape();
 
 async function scrape() {
     const timer = new Utils.Timer();
+    try {
+        // Create necessary directories if the don't exist
+        if (!fs.existsSync('result')) fs.mkdirSync('result');
+        if (!fs.existsSync('error')) fs.mkdirSync('error');
 
-    // Get the array of card urls to scrape
-    const cardUrls = getCardUrls();
-    console.log('cardUrls', cardUrls);
+        // Get the array of card urls to scrape
+        const cardUrls = getCardUrls();
+        console.log('cardUrls', cardUrls);
 
-    // Launch the scraper process passing an array of card urls
-    const result = await CardMarketScraper.scrapeCardArticles(cardUrls);
-    console.log('CardMarkerScraper.scrapeCardArticles result', result);
+        // Launch the scraper process passing an array of card urls
+        const result = await CardMarketScraper.scrapeCardArticles(cardUrls);
+        console.log('CardMarkerScraper.scrapeCardArticles result', result);
 
-    // Generate a json file with the scraping result
-    const fileName = moment().format('YYYY-MM-DD') + '_' + Date.now() + '.json';
-    if (!fs.existsSync('result')) fs.mkdirSync('result');
-    fs.writeFileSync('result/' + fileName, JSON.stringify(result, null, 2));
+        // Generate a json file with the scraping result
+        fs.writeFileSync(
+            'result/' + moment().format('YYYY-MM-DD') + '_' + Date.now() + '.json', 
+            JSON.stringify(result, null, 2)
+        );
+    } catch (error) {
+        console.error(error)
 
-    // Log the total execution time
-    timer.registerAndLogTotal('END');
+        // Generate a json file with the error data
+        fs.writeFileSync(
+            'error/error_' + moment().format('YYYY-MM-DD') + '_' + Date.now() + '.json', 
+            JSON.stringify({
+                error: error,
+                errorString: error.toString(),
+            }, null, 2)
+        );
+    } finally {
+        // Log the total execution time
+        timer.registerAndLogTotal('END');
+    }
 }
 
 function getCardUrls() {
