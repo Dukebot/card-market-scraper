@@ -48,8 +48,8 @@ function puppeteerDefaultArgs() {
  * @param {function} scrapingFunction 
  * @returns return value of the scraping function
  */
-async function scrape(scrapingFunction) {
-    const browser = await newBrowser()
+async function scrape(scrapingFunction, launchOptions) {
+    const browser = await newBrowser(launchOptions)
     try {
         return await scrapingFunction(browser)
     } catch (error) {
@@ -110,12 +110,15 @@ async function closeBrowser(browser) {
 /**
  * Create a new page with the current browser
  * @param {object} browser
+ * @param {object} proxy
  * @returns {object} Page
  */
-async function newPage(browser) {
+async function newPage(browser, proxy) {
     const page = await browser.newPage()
-    // page.setDefaultTimeout(0)
     disableWebdriver(page)
+    if (proxy) {
+        await page.authenticate({ username: proxy.username, password: proxy.password })
+    }
     return page
 }
 
