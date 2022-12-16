@@ -97,7 +97,7 @@ class Scraper {
         return scraper.pressLoadMoreButton(page, query, maxButtonPresses, minWaitTime, maxWaitTime)
     }
 
-    static async autoScroll(page) {
+    async autoScroll(page) {
         return scraper.autoScroll(page)
     }
 
