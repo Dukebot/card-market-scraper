@@ -24,8 +24,13 @@ async function scrapeCardArticles(cardUrls) {
         // Navigate to each card url and extract articles information
         const page = await Scraper.newPage(browser)
         for (const cardUrl of cardUrls) {
-            const card = await getCardArticles(page, cardUrl)            
-            cards.push(card)
+            try {
+                const card = await getCardArticles(page, cardUrl)            
+                cards.push(card)
+            } catch (error) {
+                console.error(error)
+                cards.push({ cardUrl, error })
+            }
 
             // Add a delay to reduce the request rate
             await Scraper.waitRandom(1000, 2000)
