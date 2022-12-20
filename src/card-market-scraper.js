@@ -10,7 +10,6 @@ const Entity = require('./entity')
  */
 const loadMoreBtnMaxPresses = 15
 
-
 /**
  * Scrape card market cards articles info
  * @param {array} cardUrls Array of strings containing the cards urls
