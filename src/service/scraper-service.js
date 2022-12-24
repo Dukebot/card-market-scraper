@@ -37,7 +37,7 @@ async function scrape(cardUrls) {
             JSON.stringify(result, null, 2)
         );
     } catch (error) {
-        console.error(error)
+        console.error(error);
 
         // Generate a json file with the error data
         fs.writeFileSync(
@@ -56,4 +56,4 @@ async function scrape(cardUrls) {
 module.exports = {
     getCardUrls,
     scrape,
-}
+};
