@@ -39,9 +39,9 @@ async function scrape(cardUrls) {
 }
 
 function getCardUrls() {
-    // Verify that the input file exists
+    // If the file don't exists, we create it based on the example file
     if (!fs.existsSync('input/cards.txt')) {
-        throw Error('The file "input/input.txt" does not exist. Please create it and put in the card urls there...');
+        fs.copyFileSync('input/_cards.txt', 'input/cards.txt');
     }
 
     // Get card urls from file input
