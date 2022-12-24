@@ -1,5 +1,6 @@
 node_modules
 result
 error
-input/input.txt
+input/cards.txt
 input/backup.txt
+input/scrape_job_hours.txt

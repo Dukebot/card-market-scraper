@@ -1,7 +1,7 @@
 const moment = require('moment')
 
 const Scraper = require('./scraper')
-const Entity = require('./entity')
+const Entity = require('../entity')
 
 /**
  * Number of times that the scraper will press the load more button.
