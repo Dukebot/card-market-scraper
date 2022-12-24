@@ -1,15 +1,14 @@
 const moment = require('moment');
 const fs = require('fs');
-
 const ScraperService = require('./src/service/scraper-service');
 
 
 const hoursToExec = parseScrapeJobHoursFile();
+console.log('hoursToExec', hoursToExec);
+
 const oneHour = 1000 * 60 * 60;
 
 let running = false;
-
-console.log('hoursToExec', hoursToExec);
 
 scrape();
 setInterval(scrape, oneHour / 4);

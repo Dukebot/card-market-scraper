@@ -40,7 +40,7 @@ async function scrape(cardUrls) {
 
 function getCardUrls() {
     // Verify that the input file exists
-    if (!fs.existsSync('input/input.txt')) {
+    if (!fs.existsSync('input/cards.txt')) {
         throw Error('The file "input/input.txt" does not exist. Please create it and put in the card urls there...');
     }
 
