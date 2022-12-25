@@ -17,6 +17,8 @@ const loadMoreBtnMaxPresses = 15
  * @returns Array of Objects containing card data
  */
 async function scrapeCardArticles(cardUrls) {
+    const today = moment().format('YYYY-MM-DD')
+
     return Scraper.scrape(async function (browser) {
         let cards = []
         
@@ -39,7 +41,7 @@ async function scrapeCardArticles(cardUrls) {
         cards = cards.map(card => {
             card = new Entity.Card(card)
             for (const article of card.articles) {
-                article.day = moment().format('YYYY-MM-DD')
+                article.day = today
             }
             return card
         })
