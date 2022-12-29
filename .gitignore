@@ -4,3 +4,4 @@ error
 input/cards.txt
 input/backup.txt
 input/scrape_job_hours.txt
+.env

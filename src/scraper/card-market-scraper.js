@@ -1,7 +1,6 @@
 const moment = require('moment')
 
 const Scraper = require('./scraper')
-const Entity = require('../entity')
 
 /**
  * Number of times that the scraper will press the load more button.
@@ -20,51 +19,25 @@ async function scrapeCardsArticles(cardUrls) {
     const today = moment().format('YYYY-MM-DD')
 
     return Scraper.scrape(async function (browser) {
+        const page = await Scraper.newPage(browser)
+
         let cards = []
         
         // Navigate to each card url and extract articles information
-        const page = await Scraper.newPage(browser)
         for (const cardUrl of cardUrls) {
-            try {
-                const card = await getCardArticles(page, cardUrl)            
-                cards.push(card)
-            } catch (error) {
-                console.error(error)
-                cards.push({ cardUrl, error })
-
-                throw error
-            }
+            const card = await getCardArticles(page, cardUrl)
+            
+            for (const article of card.articles) {
+                article.day = today
+            }   
+            
+            cards.push(card)
 
             // Add a delay to reduce the request rate
             await Scraper.waitRandom(1000, 2000)
         }
 
-        // Format scraped data
-        cards = cards.map(card => {
-            card = new Entity.Card(card)
-            for (const article of card.articles) {
-                article.day = today
-            }
-            return card
-        })
-
         return cards
-    })
-}
-
-async function scrapeCardArticles(cardUrl) {
-    const today = moment().format('YYYY-MM-DD')
-
-    return Scraper.scrape(async function (browser) {
-        const page = await Scraper.newPage(browser)
-        
-        return getCardArticles(page, cardUrl).then(card => {
-            card = new Entity.Card(card)
-            for (const article of card.articles) {
-                article.day = today
-            }
-            return card
-        })
     })
 }
 
@@ -228,6 +201,5 @@ async function getArticles(page) {
 
 
 module.exports = { 
-    scrapeCardArticles,
     scrapeCardsArticles
 }

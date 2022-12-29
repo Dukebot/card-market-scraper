@@ -2,33 +2,22 @@ const fs = require('fs');
 const moment = require('moment');
 
 const Utils = require('../utils');
+const Entity = require('../entity')
 const CardMarketScraper = require('../scraper/card-market-scraper');
-
-function getCardUrls() {
-    // If the file don't exists, we create it based on the example file
-    if (!fs.existsSync('input/cards.txt')) {
-        fs.copyFileSync('input/_cards.txt', 'input/cards.txt');
-    }
-
-    // Get card urls from file input
-    const fileBuffer = fs.readFileSync('input/cards.txt');
-    const fileText = fileBuffer.toString().split('\r').join('');
-    const cardUrls = fileText.split('\n');
-
-    // Return only valid card urls
-    return cardUrls.filter(url => url.startsWith('https://www.cardmarket.com/en/'));
-}
 
 async function scrape(cardUrls) {
     const timer = new Utils.Timer();
     console.log('cardUrls', cardUrls);
+    
     try {
         // Create necessary directories if the don't exist
         if (!fs.existsSync('result')) fs.mkdirSync('result');
         if (!fs.existsSync('error')) fs.mkdirSync('error');
 
         // Launch the scraper process passing an array of card urls
-        const result = await CardMarketScraper.scrapeCardsArticles(cardUrls);
+        const result = await CardMarketScraper.scrapeCardsArticles(cardUrls).then(cards => {
+            return cards.map(card => new Entity.Card(card))
+        });
         console.log('CardMarkerScraper.scrapeCardArticles result', result);
 
         // Generate a json file with the scraping result
@@ -36,6 +25,8 @@ async function scrape(cardUrls) {
             'result/' + moment().format('YYYY-MM-DD') + '_' + Date.now() + '.json', 
             JSON.stringify(result, null, 2)
         );
+
+        return result
     } catch (error) {
         // Generate a json file with the error data
         fs.writeFileSync(
@@ -54,6 +45,5 @@ async function scrape(cardUrls) {
 }
 
 module.exports = {
-    getCardUrls,
     scrape,
 };
