@@ -19,7 +19,7 @@ const loadMoreBtnMaxPresses = 15
 async function scrapeCardArticles(cardUrls) {
     const today = moment().format('YYYY-MM-DD')
 
-    return Scraper.scrape(async function (browser) {
+    return await Scraper.scrape(async function (browser) {
         let cards = []
         
         // Navigate to each card url and extract articles information
@@ -31,6 +31,8 @@ async function scrapeCardArticles(cardUrls) {
             } catch (error) {
                 console.error(error)
                 cards.push({ cardUrl, error })
+
+                throw error
             }
 
             // Add a delay to reduce the request rate

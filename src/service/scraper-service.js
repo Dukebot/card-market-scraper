@@ -37,7 +37,7 @@ async function scrape(cardUrls) {
             JSON.stringify(result, null, 2)
         );
     } catch (error) {
-        console.error(error);
+        console.error('ERROR CATCHEADO :D', error);
 
         // Generate a json file with the error data
         fs.writeFileSync(
@@ -47,6 +47,8 @@ async function scrape(cardUrls) {
                 errorString: error.toString(),
             }, null, 2)
         );
+
+        throw error;
     } finally {
         // Log the total execution time
         timer.registerAndLogTotal('END');
