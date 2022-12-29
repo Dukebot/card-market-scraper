@@ -16,10 +16,10 @@ const loadMoreBtnMaxPresses = 15
  * @param {object} puppeteerLaunchOptions
  * @returns Array of Objects containing card data
  */
-async function scrapeCardArticles(cardUrls) {
+async function scrapeCardsArticles(cardUrls) {
     const today = moment().format('YYYY-MM-DD')
 
-    return await Scraper.scrape(async function (browser) {
+    return Scraper.scrape(async function (browser) {
         let cards = []
         
         // Navigate to each card url and extract articles information
@@ -49,6 +49,22 @@ async function scrapeCardArticles(cardUrls) {
         })
 
         return cards
+    })
+}
+
+async function scrapeCardArticles(cardUrl) {
+    const today = moment().format('YYYY-MM-DD')
+
+    return Scraper.scrape(async function (browser) {
+        const page = await Scraper.newPage(browser)
+        
+        return getCardArticles(page, cardUrl).then(card => {
+            card = new Entity.Card(card)
+            for (const article of card.articles) {
+                article.day = today
+            }
+            return card
+        })
     })
 }
 
@@ -212,5 +228,6 @@ async function getArticles(page) {
 
 
 module.exports = { 
-    scrapeCardArticles 
+    scrapeCardArticles,
+    scrapeCardsArticles
 }

@@ -23,8 +23,6 @@ function App(port) {
             const result = await Service.Scraper.scrape([cardUrl])
             res.send(result)
         } catch (error) {
-            console.log('arriba aquí??????')
-
             res.status(500).send(error.toString())
         }
     })

@@ -28,7 +28,7 @@ async function scrape(cardUrls) {
         if (!fs.existsSync('error')) fs.mkdirSync('error');
 
         // Launch the scraper process passing an array of card urls
-        const result = await CardMarketScraper.scrapeCardArticles(cardUrls);
+        const result = await CardMarketScraper.scrapeCardsArticles(cardUrls);
         console.log('CardMarkerScraper.scrapeCardArticles result', result);
 
         // Generate a json file with the scraping result
@@ -37,8 +37,6 @@ async function scrape(cardUrls) {
             JSON.stringify(result, null, 2)
         );
     } catch (error) {
-        console.error('ERROR CATCHEADO :D', error);
-
         // Generate a json file with the error data
         fs.writeFileSync(
             'error/error_' + moment().format('YYYY-MM-DD') + '_' + Date.now() + '.json', 
