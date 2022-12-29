@@ -1,10 +1,7 @@
-const App = require('./src/app')
-const Config = require('./src/config')
-const CardMarketScraper = require('./src/scraper/card-market-scraper')
-const Entity = require('./src/entity')
-const Service = require('./src/service')
+const CardMarketScraper = require('./scraper/card-market-scraper')
+const Entity = require('./entity')
 
-const app = new App(function (app) {
+function Controller(app) {
     app.get('/', function (req, res) {
         res.send("Wellcome to the entry point!")
     })
@@ -22,6 +19,6 @@ const app = new App(function (app) {
             res.status(500).send(error.toString())
         }
     })
-})
+}
 
-app.run(Config.port)
+module.exports = Controller

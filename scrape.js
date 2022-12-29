@@ -1,9 +1,13 @@
 const fs = require('fs');
 const moment = require('moment');
 
-const Utils = require('../utils');
-const Entity = require('../entity')
-const CardMarketScraper = require('../scraper/card-market-scraper');
+const Utils = require('./src/utils');
+const Entity = require('./src/entity');
+const InputService = require('./src/services/input-service');
+const CardMarketScraper = require('./src/scraper/card-market-scraper');
+
+const cardUrls = InputService.getCardUrls()
+scrape(cardUrls)
 
 async function scrape(cardUrls) {
     const timer = new Utils.Timer();
@@ -43,7 +47,3 @@ async function scrape(cardUrls) {
         timer.registerAndLogTotal('END');
     }
 }
-
-module.exports = {
-    scrape,
-};
