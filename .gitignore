@@ -1,7 +1,8 @@
 node_modules
+.env
+
 result
 error
-input/cards.txt
-input/backup.txt
-input/scrape_job_hours.txt
-.env
+
+input/*
+!input/example-card-list.txt
