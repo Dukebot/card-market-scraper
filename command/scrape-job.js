@@ -10,6 +10,15 @@ const inputFileName = myArgs[1]
 let lastExecutedDay = null
 let running = false
 
+console.log('parameters', { hourToExecute, inputFileName })
+
+if (isNaN(+hourToExecute)) {
+    throw Error('Wrong hourToExecute parameter (' + hourToExecute + ') it must be a number')
+}
+if (+hourToExecute < 0 || +hourToExecute > 23) {
+    throw Error('Wrong hourToExecute parameter (' + hourToExecute + ') it must be a value between 0 and 23')
+}
+
 setInterval(async function () {
     const currentDay = moment().format('YYYY-MM-DD')
     const currentHour = moment().format('HH')
