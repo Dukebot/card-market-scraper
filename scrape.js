@@ -6,44 +6,51 @@ const Entity = require('./src/entity');
 const InputService = require('./src/services/input-service');
 const CardMarketScraper = require('./src/scraper/card-market-scraper');
 
-const cardUrls = InputService.getCardUrls()
-scrape(cardUrls)
+scrape(InputService.getCardUrls());
 
 async function scrape(cardUrls) {
+    console.log('scrape -> cardUrls', cardUrls);
+
+    // Start new timer to count execution time
     const timer = new Utils.Timer();
-    console.log('cardUrls', cardUrls);
-    
     try {
-        // Create necessary directories if the don't exist
-        if (!fs.existsSync('result')) fs.mkdirSync('result');
-        if (!fs.existsSync('error')) fs.mkdirSync('error');
-
         // Launch the scraper process passing an array of card urls
-        const result = await CardMarketScraper.scrapeCardsArticles(cardUrls).then(cards => {
-            return cards.map(card => new Entity.Card(card))
-        });
-        console.log('CardMarkerScraper.scrapeCardArticles result', result);
+        const result = await CardMarketScraper.scrapeCardsArticles(cardUrls)
+            .then(cards => cards.map(card => new Entity.Card(card)));
+        console.log('scrape -> result', result);
 
-        // Generate a json file with the scraping result
-        fs.writeFileSync(
-            'result/' + moment().format('YYYY-MM-DD') + '_' + Date.now() + '.json', 
-            JSON.stringify(result, null, 2)
-        );
-
-        return result
+        // Generate JSON file with the scraping result
+        createResultJson(result);
+        console.log('scrape -> RESULT JSON file generated');
     } catch (error) {
-        // Generate a json file with the error data
-        fs.writeFileSync(
-            'error/error_' + moment().format('YYYY-MM-DD') + '_' + Date.now() + '.json', 
-            JSON.stringify({
-                error: error,
-                errorString: error.toString(),
-            }, null, 2)
-        );
+        // Generate JSON file with error data
+        createErrorJson(error);
+        console.log('scrape -> ERROR JSON file generated');
 
         throw error;
     } finally {
         // Log the total execution time
-        timer.registerAndLogTotal('END');
+        timer.registerAndLogTotal('scrape -> ends');
     }
+}
+
+function createResultJson(result) {
+    if (!fs.existsSync('result')) fs.mkdirSync('result');
+
+    const fileName = 'result/' + moment().format('YYYY-MM-DD') + '_' + Date.now() + '.json';
+    const fileContent = JSON.stringify(result, null, 2);
+
+    fs.writeFileSync(fileName, fileContent);
+}
+
+function createErrorJson(error) {
+    if (!fs.existsSync('error')) fs.mkdirSync('error');
+
+    const fileName = 'error/error_' + moment().format('YYYY-MM-DD') + '_' + Date.now() + '.json';
+    const fileContent = JSON.stringify({
+        error: error,
+        errorString: error.toString(),
+    }, null, 2);
+    
+    fs.writeFileSync(fileName, fileContent);
 }

@@ -10,9 +10,9 @@ function Controller(app) {
         try {
             const cardUrl = req.query.url
 
-            const result = await CardMarketScraper.scrapeCardsArticles([cardUrl]).then(cards => {
-                return cards.map(card => new Entity.Card(card))
-            });
+            const result = await CardMarketScraper
+                .scrapeCardArticles(cardUrl)
+                .then(card => new Entity.Card(card))
 
             res.send(result)
         } catch (error) {
