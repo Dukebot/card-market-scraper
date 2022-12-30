@@ -12,19 +12,21 @@ async function scrape(cardUrls) {
     const timer = new Utils.Timer();
     try {
         // Launch the scraper process passing an array of card urls
-        const result = await CardMarketScraper.scrapeCardsArticles(cardUrls)
+        const result = await CardMarketScraper
+            .scrapeCardsArticles(cardUrls)
             .then(cards => cards.map(card => new Entity.Card(card)));
-        console.log('scrape -> result', result);
-
+        
         // Generate JSON file with the scraping result
         createResultJson(result);
-        console.log('scrape -> RESULT JSON file generated');
+        console.log('scrape -> result', result);
+    
     } catch (error) {
         // Generate JSON file with error data
         createErrorJson(error);
         console.log('scrape -> ERROR JSON file generated');
 
         throw error;
+    
     } finally {
         // Log the total execution time
         timer.registerAndLogTotal('scrape -> ends');
