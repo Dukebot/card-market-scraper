@@ -1,7 +1,7 @@
 const moment = require('moment')
 
-const InputService = require('./src/services/input-service')
-const ScraperService = require('./src/services/scraper-service')
+const InputService = require('../src/services/input-service')
+const ScraperService = require('../src/services/scraper-service')
 
 const myArgs = process.argv.slice(2)
 const hourToExecute = myArgs[0] || '12'
